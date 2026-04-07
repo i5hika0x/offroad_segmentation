@@ -147,7 +147,4 @@ In the app:
 - Poor performance on CPU
   - Use fewer epochs, batch size 1, and smaller experiments for demo.
 
-## Team
 
-- Team Name: Code Squad
-- Hackathon Track: Semantic Segmentation - Offroad Autonomy
