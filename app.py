@@ -13,12 +13,12 @@ import torchvision.transforms as transforms
 from PIL import Image
 
 DEFAULT_CLASS_NAMES = [
-    "Background",
     "Trees",
     "Lush Bushes",
     "Dry Grass",
     "Dry Bushes",
     "Ground Clutter",
+    "Flowers",
     "Logs",
     "Rocks",
     "Landscape",
@@ -29,12 +29,12 @@ DEFAULT_CLASS_NAMES = [
 def build_color_palette(num_classes: int) -> np.ndarray:
     base = np.array(
         [
-            [0, 0, 0],
             [34, 139, 34],
-            [0, 255, 0],
+            [0, 200, 70],
             [210, 180, 140],
             [139, 90, 43],
-            [128, 128, 0],
+            [120, 120, 20],
+            [255, 120, 180],
             [139, 69, 19],
             [128, 128, 128],
             [160, 82, 45],

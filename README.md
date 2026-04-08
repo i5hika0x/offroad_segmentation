@@ -7,6 +7,32 @@ This repository contains a complete offroad semantic segmentation pipeline:
 - evaluation on test split
 - Streamlit frontend for interactive inference
 
+## Falcon Desert Hackathon Notes
+
+If your team already downloaded the Falcon desert dataset, keep using that same dataset and folder layout. You do not need a different dataset.
+
+Expected split structure:
+
+- `<dataset_root>/train/Color_Images`
+- `<dataset_root>/train/Segmentation`
+- `<dataset_root>/val/Color_Images`
+- `<dataset_root>/val/Segmentation`
+- `<dataset_root>/test/Color_Images`
+- `<dataset_root>/test/Segmentation`
+
+Default Falcon class mapping used by upgraded scripts:
+
+- `100 -> Trees`
+- `200 -> Lush Bushes`
+- `300 -> Dry Grass`
+- `500 -> Dry Bushes`
+- `550 -> Ground Clutter`
+- `600 -> Flowers`
+- `700 -> Logs`
+- `800 -> Rocks`
+- `7100 -> Landscape`
+- `10000 -> Sky`
+
 The guide below is for a person cloning this repository on a fresh machine.
 
 ## 1) Clone The Repository
@@ -99,10 +125,18 @@ python generate_mask_mapping.py --mask_dir "<output_root>/train/Segmentation" --
 ## 7) Train
 
 ```bash
-python train_segmentation.py --train_dir "<output_root>/train" --val_dir "<output_root>/val" --mapping_json "<output_root>/mask_mapping.json" --output_dir "<output_root>/train_stats" --batch_size 2 --epochs 10 --lr 1e-4 --num_workers 0 --backbone_size small
+python train_segmentation.py --train_dir "<output_root>/train" --val_dir "<output_root>/val" --mapping_json "<output_root>/mask_mapping.json" --output_dir "<output_root>/train_stats" --batch_size 2 --epochs 20 --lr 3e-4 --num_workers 0 --backbone_size small --optimizer adamw --scheduler cosine --class_weighting auto --amp 1 --early_stop_patience 8 --aug_hflip 0.5 --aug_color_jitter 0.2
 ```
 
-Training saves checkpoint in repo root as:
+Training saves artifacts in `<output_root>/train_stats`:
+
+- `checkpoints/best_segmentation_head.pth`
+- `checkpoints/last_segmentation_head.pth`
+- `history.csv`, `history.json`, `training_curves.png`
+- `training_summary.json`
+- `class_names.json`
+
+And exports best checkpoint in repo root as:
 
 - `segmentation_head.pth`
 
@@ -111,10 +145,16 @@ For a quick smoke test, use `--epochs 1 --batch_size 1`.
 ## 8) Evaluate
 
 ```bash
-python test_segmentation.py --model_path "segmentation_head.pth" --data_dir "<output_root>/test" --mapping_json "<output_root>/mask_mapping.json" --output_dir "<output_root>/predictions" --batch_size 2 --num_workers 0
+python test_segmentation.py --model_path "segmentation_head.pth" --data_dir "<output_root>/test" --mapping_json "<output_root>/mask_mapping.json" --output_dir "<output_root>/predictions" --batch_size 2 --num_workers 0 --save_predictions 1 --failure_k 20
 ```
 
-You will get metrics such as Mean IoU, Dice, Pixel Accuracy, and mAP@0.5.
+You will get metrics and reporting artifacts:
+
+- Mean IoU, Mean Dice, Pixel Accuracy
+- `evaluation_summary.json`
+- `per_class_metrics.csv`
+- `failure_cases.csv`
+- `pred_masks/` and `overlays/` for visual report evidence
 
 ## 9) Run Frontend Demo
 
