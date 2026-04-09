@@ -24,3 +24,4 @@ c:/Users/abhra/OneDrive/Desktop/Offroad_Segmentation_Scripts/.venv/Scripts/pytho
 - First run may be slower because DINOv2 is loaded from torch hub.
 - Optional: provide a `class_names.json` file in repo root for readable class labels.
 	- JSON list format example: `["class0", "class1", "class2"]`
+	ishika is best coder
