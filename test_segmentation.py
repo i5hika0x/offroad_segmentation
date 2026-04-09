@@ -250,7 +250,7 @@ def update_confusion_matrix(conf_mat, pred, target, num_classes, ignore_index):
     target = target[valid]
     idx = target * num_classes + pred
     bins = torch.bincount(idx, minlength=num_classes * num_classes)
-    conf_mat += bins.reshape(num_classes, num_classes)
+    conf_mat += bins.reshape(num_classes, num_classes).cpu().numpy().astype(np.int64)
     return conf_mat
 
 

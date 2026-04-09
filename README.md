@@ -69,27 +69,18 @@ python -m pip install torch torchvision opencv-contrib-python numpy pillow tqdm 
 
 ## 4) Choose Dataset Source
 
-You have two options.
+Use your own segmentation dataset (Falcon or custom).
 
-### Option A: Small Demo Dataset (Fast, recommended for first run)
+If your dataset is already split, keep this structure and skip to training/evaluation:
 
-- Download: http://rugd.vision/data/RUGD_sample-data.zip
+- `<dataset_root>/train/Color_Images`
+- `<dataset_root>/train/Segmentation`
+- `<dataset_root>/val/Color_Images`
+- `<dataset_root>/val/Segmentation`
+- `<dataset_root>/test/Color_Images`
+- `<dataset_root>/test/Segmentation`
 
-After extracting, you should have folders like:
-
-- `<sample_root>/images`
-- `<sample_root>/annotations`
-
-### Option B: Full RUGD Dataset
-
-- Raw frames: http://rugd.vision/data/RUGD_frames-with-annotations.zip
-- Annotations: http://rugd.vision/data/RUGD_annotations.zip
-- Dataset info: https://datasetninja.com/rugd
-
-After extracting, identify:
-
-- `images_dir` (RGB frames)
-- `masks_dir` (segmentation masks)
+If you have raw image/mask folders, continue with Step 5 to generate train/val/test splits.
 
 ## 5) Prepare Train/Val/Test Folder Structure
 
@@ -102,8 +93,10 @@ python prepare_rugd_dataset.py --images_dir "<images_dir>" --masks_dir "<masks_d
 Example:
 
 ```bash
-python prepare_rugd_dataset.py --images_dir "demo_data/rugd_sample/RUGD_sample-data/images" --masks_dir "demo_data/rugd_sample/RUGD_sample-data/annotations" --output_root "demo_data/rugd_demo_ready" --split_mode by-sequence --train_ratio 0.64 --val_ratio 0.10 --seed 42
+python prepare_rugd_dataset.py --images_dir "<falcon_images_dir>" --masks_dir "<falcon_masks_dir>" --output_root "<dataset_root>" --split_mode by-sequence --train_ratio 0.64 --val_ratio 0.10 --seed 42
 ```
+
+If your data is already split into train/val/test folders, you can skip this step.
 
 This creates:
 
@@ -124,6 +117,8 @@ python generate_mask_mapping.py --mask_dir "<output_root>/train/Segmentation" --
 
 ## 7) Train
 
+Generic command:
+
 ```bash
 python train_segmentation.py --train_dir "<output_root>/train" --val_dir "<output_root>/val" --mapping_json "<output_root>/mask_mapping.json" --output_dir "<output_root>/train_stats" --batch_size 2 --epochs 20 --lr 3e-4 --num_workers 0 --backbone_size small --optimizer adamw --scheduler cosine --class_weighting auto --amp 1 --early_stop_patience 8 --aug_hflip 0.5 --aug_color_jitter 0.2
 ```
@@ -143,6 +138,8 @@ And exports best checkpoint in repo root as:
 For a quick smoke test, use `--epochs 1 --batch_size 1`.
 
 ## 8) Evaluate
+
+Generic command:
 
 ```bash
 python test_segmentation.py --model_path "segmentation_head.pth" --data_dir "<output_root>/test" --mapping_json "<output_root>/mask_mapping.json" --output_dir "<output_root>/predictions" --batch_size 2 --num_workers 0 --save_predictions 1 --failure_k 20
