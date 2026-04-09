@@ -1,0 +1,69 @@
+.arch-section {
+    padding: 6rem 2rem;
+    background: linear-gradient(to bottom, transparent, rgba(168, 85, 247, 0.05));
+}
+
+.arch-header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.arch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2rem;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.arch-card {
+    background: rgba(13, 6, 26, 0.8);
+    border: 1px solid var(--border-subtle);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.arch-card:hover {
+    border-color: var(--accent-neon);
+    box-shadow: inset 0 0 20px rgba(168, 85, 247, 0.1), 0 0 30px rgba(168, 85, 247, 0.2);
+    transform: translateY(-5px);
+}
+
+.arch-num {
+    font-size: 5rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    line-height: 1;
+    color: white;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    position: relative;
+}
+
+.arch-num::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -10%;
+    width: 120%;
+    height: 4px;
+    background: var(--bg-deep);
+    transform: translateY(-5px) rotate(-5deg);
+}
+
+.arch-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.5px;
+}
+
+.arch-card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
